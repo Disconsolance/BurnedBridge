@@ -16,15 +16,13 @@ async def listen():
                 if event.type == VkEventType.MESSAGE_NEW:
                     print(event)
                     if event.from_chat is True:
-                        print(f"This message came from a group chat! It's {event.peer_id}")
+                        print(f"This message came from a group chat! It's {event.peer_id}, but came from {event.user_id}!")
+                        User = await Handling.CreateUser(vk, event.peer_id)
                     else:
                         print(f"This message came from a user! It's {event.peer_id}")
-                    text=event.text.lower()
-                    peer_id=event.peer_id
-                    time_=event.raw[4]
-                    message_id=event.message_id
-                    print(text)
+                        User = await Handling.CreateUser(vk, event.peer_id)
+                    print(event.text)
         except:
             print('LongPoll has crashed! Awaiting 5 seconds before resuming!')
             traceback.print_exc()
-            asyncio.sleep(5)
+            await asyncio.sleep(5)
