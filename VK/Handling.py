@@ -13,7 +13,7 @@ async def Process(vk, event):
         User = await CreateUser(vk, event.user_id)
     if len(event.attachments) != 0: # Does this message even have attachments?
         tmp = vk.messages.getById(message_ids=event.message_id)['items'][0]['attachments']
-        Attachments = await FetchPhotos(vk, tmp, event.attachments)
+        Attachments = await FetchPhotos(tmp, event.attachments)
     Message = await ScrubMasspings(Message)
 
 async def CreateUser(vk, ID):
@@ -21,7 +21,7 @@ async def CreateUser(vk, ID):
     print(userinfo)
     return User.User(userinfo['first_name'], userinfo['last_name'], userinfo['id'], userinfo['screen_name'], userinfo['photo_50'])
 
-async def FetchPhotos(vk, tmp, AttachmentsList):
+async def FetchPhotos(tmp, AttachmentsList):
     PhotoURLList=[]
     ATTLEN=int(len(AttachmentsList)/2)
     for i in range(ATTLEN):
