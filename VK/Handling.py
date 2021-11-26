@@ -14,6 +14,7 @@ async def Process(vk, event):
     if len(event.attachments) != 0: # Does this message even have attachments?
         tmp = vk.messages.getById(message_ids=event.message_id)['items'][0]['attachments']
         Attachments = await FetchPhotos(tmp, event.attachments)
+        Message = await AppendAttachmentURL(Message, Attachments)
     Message = await ScrubMasspings(Message)
 
 async def CreateUser(vk, ID):
@@ -28,6 +29,12 @@ async def FetchPhotos(tmp, AttachmentsList):
         if AttachmentsList[f'attach{i+1}_type'] == 'photo':
             PhotoURLList.append(tmp[i]['photo']['sizes'][4]['url'])
     return PhotoURLList
+
+async def AppendAttachmentURL(Message, Attachments):
+    Message += "\n\nAttachments:\n"
+    for URL in Attachments:
+        Message += f"{URL}\n"
+    return Message
 
 async def ScrubMasspings(Message):
     result = Message.replace("@here", "!MASSPING!")
