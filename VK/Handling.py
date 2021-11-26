@@ -1,17 +1,29 @@
 import vk_api
 from VK import User
+from config import TOKEN
 
 async def Process(vk, event):
     print(event)
-    if event.from_chat is True:
+    if event.from_chat is True: # Is this message from a chatroom?
         print(f"This message came from a group chat! It's {event.peer_id}, but came from {event.user_id}!")
         User = await CreateUser(vk, event.user_id)
-    else:
+    else: # Anywhere else
         print(f"This message came from a user! It's {event.user_id}")
         User = await CreateUser(vk, event.user_id)
+    if len(event.attachments) != 0: # Does this message even have attachments?
+        tmp = vk.messages.getById(message_ids=event.message_id)['items'][0]['attachments']
+        Attachments = await FetchPhotos(vk, tmp, event.attachments)
     print(event.text)
 
 async def CreateUser(vk, ID):
     userinfo = vk.users.get(userids=ID, fields="first_name, last_name, screen_name, photo_50")[0]
     print(userinfo)
     return User.User(userinfo['first_name'], userinfo['last_name'], userinfo['id'], userinfo['screen_name'], userinfo['photo_50'])
+
+async def FetchPhotos(vk, tmp, AttachmentsList):
+    PhotoURLList=[]
+    ATTLEN=int(len(AttachmentsList)/2)
+    for i in range(ATTLEN):
+        if AttachmentsList[f'attach{i+1}_type'] == 'photo':
+            PhotoURLList.append(tmp[i]['photo']['sizes'][4]['url'])
+    return PhotoURLList
