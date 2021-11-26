@@ -32,9 +32,10 @@ async def FetchPhotos(tmp, AttachmentsList):
     return PhotoURLList
 
 async def AppendAttachmentURL(Message, Attachments):
-    Message += "\n\nAttachments:\n"
+    Message += "\n\nAttachments:```\n"
     for URL in Attachments:
         Message += f"{URL}\n"
+    Message += "```"
     return Message
 
 async def ScrubMasspings(Message):
