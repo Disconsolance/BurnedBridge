@@ -2,7 +2,7 @@
 A VK-to-Discord one way relay system using LongPoll and vk_api
 
 ### Supports
-- [x] Name, Surname
+- [x] Name, Surname, Profile Picture
 - [ ] Community (bots)
 - [x] Messages
 - [ ] Voice messages
